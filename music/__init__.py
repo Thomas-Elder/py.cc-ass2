@@ -24,4 +24,7 @@ def create_app(test_config=None):
     app.register_blueprint(subscription.bp)
     app.register_blueprint(index.bp)
 
+    from . import db_spike
+    db_spike.init_app(app)
+
     return app
