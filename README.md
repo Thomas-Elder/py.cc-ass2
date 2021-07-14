@@ -11,7 +11,7 @@ Then run the flask app:
     flask run
 
 ## Deploying
-¯\\_(ツ)_/¯
+¯\\\_(ツ)\_/¯
 
 ## Tutorials
 Docker for local dynamodb container:
