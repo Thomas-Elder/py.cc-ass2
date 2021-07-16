@@ -1,0 +1,4 @@
+include music/schema.sql
+graft music/static
+graft music/templates
+global-exclude *.pyc
