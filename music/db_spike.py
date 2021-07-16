@@ -8,7 +8,7 @@ from flask.cli import with_appcontext
 
 def get_db():
     if 'db' not in g:
-        g.db = boto3.resource('dynamodb', endpoint_url="http://localhost:8042")
+        g.db = boto3.client('dynamodb', endpoint_url="http://localhost:8042", region_name="us-east-1")
     
     return g.db
 
