@@ -1,6 +1,6 @@
 # Music
 
-## Running
+## Running locally
 First run docker-compose script to get dynamodb running locally:
     docker-compose -f dynamodb/docker-compose.yaml up -d
 
@@ -10,7 +10,7 @@ Then initialise the db:
 Then run the flask app:
     flask run
 
-## Deploying
+## Deploying to EC2
 ¯\\\_(ツ)\_/¯
 
 ### package app
@@ -22,7 +22,6 @@ ssh -i [your_key_file_location]/[yourkeyfilename].pem ubuntu@ec2-3-226-251-9.com
 ### stfp
 Need to stfp the following via filezilla:
 music.whl
-requirements.txt
 
 ### setup
 pip install python3-venv
@@ -30,11 +29,10 @@ python3 -m venv venv
 source env/bin/activate
 
 ### install
-pip install -r requirments
 pip install music-1.0.0-py3-none-any.whl
 export FLASK_APP=[music]
 
-Note that music is install by default in venv/bin/python3.8/site-packages/music
+Note that music is install by default in venv/lib/python3.8/site-packages/music
 
 ### init
 flask init_db
