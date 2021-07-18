@@ -6,9 +6,16 @@ import click
 from flask import current_app, g
 from flask.cli import with_appcontext
 
+aws_access_key_id='ASIAZ27L7JUKTCNA4JHO'
+aws_secret_access_key='hmdm2p1LxarHt3ZTDfeHIlWXWCMybK/dN+Spz9aO'
+
 def get_db():
     if 'db' not in g:
-        g.db = boto3.client('dynamodb', endpoint_url="http://localhost:8042", region_name="us-east-1")
+        g.db = boto3.resource('dynamodb', 
+        aws_access_key_id=aws_access_key_id,
+        aws_secret_access_key=aws_secret_access_key,
+        endpoint_url="dynamodb.us-east-1.amazonaws.com", 
+        region_name="us-east-1")
     
     return g.db
 
@@ -37,10 +44,13 @@ def init_db():
     db = get_db()
 
     try:
-        # throws an error if it doesn't exist... 
-        table = db.describe_table("Movies")
+        # delete it if it does exist, so we can refresh
+        # this will throw an error if the table doesn't exist,
+        # so we wrap in try, and finally... 
+        table = db.Table("Movies")
+        table.delete()
 
-    except:
+    finally:
 
         click.echo('Creating table...')
 
@@ -75,14 +85,16 @@ def init_db():
         )
 
     click.echo('Initialized the database.')
+    return table
 
 def put_movie(title, year, plot, rating):
     
     db = get_db()
+    table = db.Table("Movies")
 
-    table = db.Table('Movies')
     response = table.put_item(
-       Item={
+        TableName='Movies',
+        Item={
             'year': year,
             'title': title,
             'info': {
@@ -96,8 +108,7 @@ def put_movie(title, year, plot, rating):
 def get_movie(title, year):
     
     db = get_db()
-
-    table = db.Table('Movies')
+    table = db.Table("Movies")
 
     try:
         response = table.get_item(Key={'year': year, 'title': title})
