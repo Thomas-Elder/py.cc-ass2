@@ -40,4 +40,4 @@ def login():
 @bp.route('/logout', methods=['GET', 'POST'])
 def logout():
 
-    pass
+    return redirect(url_for('index'))
