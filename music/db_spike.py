@@ -1,4 +1,6 @@
 
+import os
+
 import boto3
 from botocore.exceptions import ClientError
 
@@ -11,12 +13,17 @@ aws_secret_access_key='hmdm2p1LxarHt3ZTDfeHIlWXWCMybK/dN+Spz9aO'
 
 def get_db():
     if 'db' not in g:
-        g.db = boto3.resource('dynamodb', 
-        aws_access_key_id=aws_access_key_id,
-        aws_secret_access_key=aws_secret_access_key,
-        endpoint_url="dynamodb.us-east-1.amazonaws.com", 
-        region_name="us-east-1")
-    
+
+        if os.environ['FLASK_ENV'] == "DEV":
+            g.db = boto3.resource('dynamodb', endpoint_url="http://localhost:8042")
+            
+        else:
+            g.db = boto3.resource('dynamodb', 
+            aws_access_key_id=aws_access_key_id,
+            aws_secret_access_key=aws_secret_access_key,
+            endpoint_url="dynamodb.us-east-1.amazonaws.com", 
+            region_name="us-east-1")
+
     return g.db
 
 def close_db(e=None):
@@ -43,46 +50,44 @@ def init_db():
 
     db = get_db()
 
-    try:
-        # delete it if it does exist, so we can refresh
-        # this will throw an error if the table doesn't exist,
-        # so we wrap in try, and finally... 
-        table = db.Table("Movies")
+    # Get the table
+    table = db.Table("Movies")
+
+    # If it already exists, we're going to delete it and re-init
+    if table is not None:
         table.delete()
 
-    finally:
+    click.echo('Creating table...')
 
-        click.echo('Creating table...')
-
-        # Catch that error and create table.
-        table = db.create_table(
-            TableName='Movies',
-            KeySchema=[
-                {
-                    'AttributeName': 'year',
-                    'KeyType': 'HASH'  # Partition key
-                },
-                {
-                    'AttributeName': 'title',
-                    'KeyType': 'RANGE'  # Sort key
-                }
-            ],
-            AttributeDefinitions=[
-                {
-                    'AttributeName': 'year',
-                    'AttributeType': 'N'
-                },
-                {
-                    'AttributeName': 'title',
-                    'AttributeType': 'S'
-                },
-
-            ],
-            ProvisionedThroughput={
-                'ReadCapacityUnits': 10,
-                'WriteCapacityUnits': 10
+    # Create table.
+    table = db.create_table(
+        TableName='Movies',
+        KeySchema=[
+            {
+                'AttributeName': 'year',
+                'KeyType': 'HASH'  # Partition key
+            },
+            {
+                'AttributeName': 'title',
+                'KeyType': 'RANGE'  # Sort key
             }
-        )
+        ],
+        AttributeDefinitions=[
+            {
+                'AttributeName': 'year',
+                'AttributeType': 'N'
+            },
+            {
+                'AttributeName': 'title',
+                'AttributeType': 'S'
+            },
+
+        ],
+        ProvisionedThroughput={
+            'ReadCapacityUnits': 10,
+            'WriteCapacityUnits': 10
+        }
+    )
 
     click.echo('Initialized the database.')
     return table
