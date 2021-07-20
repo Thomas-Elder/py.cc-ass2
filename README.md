@@ -4,6 +4,10 @@
 First run docker-compose script to get dynamodb running locally:
     docker-compose -f dynamodb/docker-compose.yaml up -d
 
+Set up environment variables:
+    $Env:FLASK_ENV = "DEV"
+    $Env:FLASK_APP = "music"
+
 Then initialise the db:
     flask init_db
 
