@@ -6,6 +6,6 @@ bp = Blueprint('', __name__)
 @bp.route('/')
 def index():
 
-    data = get_user('s33750870@student.rmit.edu.au', 'Tom Elder0')
+    data = get_user('s33750870@student.rmit.edu.au')
 
     return render_template('index.html', data=data)
