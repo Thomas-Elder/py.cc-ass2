@@ -26,9 +26,24 @@ Need to stfp the wheel via filezilla
 dist\music-1.0.0-py3-none-any.whl
 
 ### setup
-pip install python3-venv
+First update:
+apt-get update
+
+#### python and pip
+Double check python is there:
+python3 --version
+
+Install pip, first dl and install package
+curl -O https://bootstrap.pypa.io/get-pip.py
+python3 get-pip.py --user
+
+.profile has a script that exports LOCAL_PATH to PATH to make pip available for use:
+source ~/PROFILE_SCRIPT
+
+Then install and activate venv:
+sudo apt-get install python3-venv
 python3 -m venv venv
-source env/bin/activate
+source venv/bin/activate
 
 ### install
 pip install music-1.0.0-py3-none-any.whl
