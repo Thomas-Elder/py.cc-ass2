@@ -51,6 +51,13 @@ def init_db():
     Initialises the database. 
     """
 
+    init_loginTable()
+    init_musicTable()
+
+    init_users()
+    init_music()  
+
+def init_loginTable():
     db = get_db()
 
     # Get the table
@@ -72,21 +79,12 @@ def init_db():
                 'AttributeName': 'email',
                 'KeyType': 'HASH'  # Partition key
             },
-            {
-                'AttributeName': 'user_name',
-                'KeyType': 'RANGE'  # Sort key
-            }
         ],
         AttributeDefinitions=[
             {
                 'AttributeName': 'email',
                 'AttributeType': 'S'
             },
-            {
-                'AttributeName': 'user_name',
-                'AttributeType': 'S'
-            },
-
         ],
         ProvisionedThroughput={
             'ReadCapacityUnits': 10,
@@ -94,10 +92,13 @@ def init_db():
         }
     )
 
-    click.echo('Initialized the database.')
+    click.echo('Initialized the login table.')
     return table
 
-def initialusers():
+def init_musicTable():
+    pass
+
+def init_users():
     """
     Adds the default users to the Users table.
     """
@@ -109,6 +110,8 @@ def initialusers():
     for email, user_name, password in zip(emails, user_names, passwords):
         put_user(email, user_name, password)
 
+def init_music():
+    pass
 
 """
 CRUD Operations
