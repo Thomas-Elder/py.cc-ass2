@@ -13,18 +13,12 @@ def create_app(test_config=None):
     else:
         app.config.from_mapping(test_config)
 
-    # ensure the instance folder exists
-    #try:
-    #    os.makedirs(app.instance_path)
-    #except OSError:
-    #    pass
-
     from .routes import authentication, subscription, index
     app.register_blueprint(authentication.bp)
     app.register_blueprint(subscription.bp)
     app.register_blueprint(index.bp)
 
-    from . import database
+    from .db import database
     database.init_app(app)
 
     return app
