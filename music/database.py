@@ -50,6 +50,7 @@ def init_db():
 
     Initialises the database. 
     """
+    click.echo('Initialising the database... ')
 
     init_loginTable()
     init_musicTable()
@@ -57,46 +58,90 @@ def init_db():
     init_users()
     init_music()  
 
+    click.echo('Database initialised.')
+
 def init_loginTable():
     db = get_db()
-
+    
     # Get the table
     table = db.Table("Login")
 
-    print(table)
-
-    # If it already exists, we're going to delete it and re-init
-    if table is not None:
-        table.delete()
-
     click.echo('Creating log in table...')
 
-    # Create table.
-    table = db.create_table(
-        TableName='Login',
-        KeySchema=[
-            {
-                'AttributeName': 'email',
-                'KeyType': 'HASH'  # Partition key
-            },
-        ],
-        AttributeDefinitions=[
-            {
-                'AttributeName': 'email',
-                'AttributeType': 'S'
-            },
-        ],
-        ProvisionedThroughput={
-            'ReadCapacityUnits': 10,
-            'WriteCapacityUnits': 10
-        }
-    )
+    try: 
+
+        # Create table.
+        table = db.create_table(
+            TableName='Login',
+            KeySchema=[
+                {
+                    'AttributeName': 'email',
+                    'KeyType': 'HASH'  # Partition key
+                },
+            ],
+            AttributeDefinitions=[
+                {
+                    'AttributeName': 'email',
+                    'AttributeType': 'S'
+                },
+            ],
+            ProvisionedThroughput={
+                'ReadCapacityUnits': 10,
+                'WriteCapacityUnits': 10
+            }
+        )
+
+    except:
+        click.echo('Table exists already')
 
     click.echo('Initialized the login table.')
     return table
 
 def init_musicTable():
-    pass
+    db = get_db()
+
+    # title, artist, year, web_url, image_url
+    # Get the table
+    table = db.Table("Music")
+
+    click.echo('Creating music table...')
+
+    try:
+
+        # Create table.
+        table = db.create_table(
+            TableName='Music',
+            KeySchema=[
+                {
+                    'AttributeName': 'artist',
+                    'KeyType': 'HASH'  # Partition key
+                },
+                {
+                    'AttributeName': 'title',
+                    'KeyType': 'RANGE'  # Sort key
+                },
+            ],
+            AttributeDefinitions=[
+                {
+                    'AttributeName': 'artist',
+                    'AttributeType': 'S'
+                },
+                {
+                    'AttributeName': 'title',
+                    'AttributeType': 'S'
+                },
+            ],
+            ProvisionedThroughput={
+                'ReadCapacityUnits': 10,
+                'WriteCapacityUnits': 10
+            }
+        )
+    
+    except :
+        click.echo('Table exists already')
+
+    click.echo('Initialized the music table.')
+    return table
 
 def init_users():
     """
@@ -123,19 +168,24 @@ def put_user(email, user_name, password):
     db = get_db()
     table = db.Table("Users")
 
-    response = table.put_item(
-        TableName='Users',
-        Item=
-        {
-            'email' : email,
-            'user_name' : user_name,
-            'info' : 
+    try:
+        response = table.put_item(
+            TableName='Users',
+            Item=
             {
-                'password': password
+                'email' : email,
+                'user_name' : user_name,
+                'info' : 
+                {
+                    'password': password
+                }
             }
-        }
-    )
-    return response
+        )
+
+    except:
+        click.echo('Error putting user')
+
+    # return response
 
 def get_user(email, user_name):
     """
