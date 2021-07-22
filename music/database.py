@@ -163,20 +163,20 @@ CRUD Operations
 """
 def put_user(email, user_name, password):
     """
-    Adds the passed user details to the Users table.
+    Adds the passed user details to the Login table.
     """
     db = get_db()
-    table = db.Table("Users")
+    table = db.Table("Login")
 
     try:
         response = table.put_item(
-            TableName='Users',
+            TableName='Login',
             Item=
             {
                 'email' : email,
-                'user_name' : user_name,
                 'info' : 
                 {
+                    'user_name' : user_name,
                     'password': password
                 }
             }
@@ -187,15 +187,15 @@ def put_user(email, user_name, password):
 
     # return response
 
-def get_user(email, user_name):
+def get_user(email):
     """
     Gets the user with the specified email.
     """
     db = get_db()
-    table = db.Table("Users")
+    table = db.Table("Login")
 
     try:
-        response = table.get_item(Key={'email': email, 'user_name': user_name})
+        response = table.get_item(Key={'email': email})
     except ClientError as e:
         print(e.response['Error']['Message'])
     else:
