@@ -23,6 +23,7 @@ setup(
         'urllib3==1.26.6',
         'waitress==2.0.0',
         'Werkzeug==2.0.1',
-        'WTForms==2.3.3'
+        'WTForms==2.3.3',
+        'python-dotenv==0.18.0'
     ],
 )
