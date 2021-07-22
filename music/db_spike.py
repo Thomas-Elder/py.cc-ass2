@@ -16,12 +16,12 @@ def get_db():
 
         if os.environ['FLASK_ENV'] == "DEV":
             g.db = boto3.resource('dynamodb', endpoint_url="http://localhost:8042")
-            
+
         else:
             g.db = boto3.resource('dynamodb', 
             aws_access_key_id=aws_access_key_id,
             aws_secret_access_key=aws_secret_access_key,
-            endpoint_url="dynamodb.us-east-1.amazonaws.com", 
+            #endpoint_url="dynamodb.us-east-1.amazonaws.com", 
             region_name="us-east-1")
 
     return g.db
