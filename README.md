@@ -1,18 +1,18 @@
 # Music
 
 ## Running locally
-First run docker-compose script to get dynamodb running locally:
-    docker-compose -f dynamodb/docker-compose.yaml up -d
+### First run docker-compose script to get dynamodb running locally:
+docker-compose -f dynamodb/docker-compose.yaml up -d
 
-Set up environment variables:
-    $Env:FLASK_ENV = "DEV"
-    $Env:FLASK_APP = "music"
+### Set up environment variables:
+$Env:FLASK_ENV = "DEV"
+$Env:FLASK_APP = "music"
 
-Then initialise the db:
-    flask init_db
+### Then initialise the db:
+flask init_db
 
-Then run the flask app:
-    flask run
+### Then run the flask app:
+flask run
 
 ## Deploying to EC2
 ¯\\\_(ツ)\_/¯
@@ -21,7 +21,7 @@ Then run the flask app:
 py setup.py bdist_wheel
 
 ### ssh cmd
-ssh -i [your_key_file_location]/[yourkeyfilename].pem ubuntu@ec2-3-226-251-9.compute-1.amazonaws.com
+ssh -i [your_key_file_location]/[your_key_filename].pem ubuntu@[your_ec2_instance_public_dns]
 
 ### stfp
 Need to stfp the wheel via filezilla
