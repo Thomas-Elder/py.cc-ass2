@@ -54,3 +54,6 @@ https://flask.palletsprojects.com/en/2.0.x/tutorial/
 
 Dynamodb crud ops:
 https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/GettingStarted.Python.html
+
+Dynamodb ref:
+https://dynobase.dev/dynamodb-python-with-boto3/
