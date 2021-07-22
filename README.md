@@ -24,8 +24,8 @@ py setup.py bdist_wheel
 ssh -i [your_key_file_location]/[yourkeyfilename].pem ubuntu@ec2-3-226-251-9.compute-1.amazonaws.com
 
 ### stfp
-Need to stfp the following via filezilla:
-music.whl
+Need to stfp the wheel via filezilla
+dist\music-1.0.0-py3-none-any.whl
 
 ### setup
 pip install python3-venv
