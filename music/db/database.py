@@ -67,11 +67,13 @@ def init_db():
     """
     click.echo('Initialising the database... ')
 
+    songfile = r"C:\Users\thomb\dev\py\cc-ass2\music\db\a2.json"
+
     init_loginTable()
     init_musicTable()
 
     init_users()
-    init_music()  
+    init_songs(songfile)  
 
     click.echo('Database initialised.')
 
@@ -183,8 +185,18 @@ def init_users():
     for email, user_name, password in zip(emails, user_names, passwords):
         put_user(email, user_name, password)
 
-def init_music():
-    pass
+def init_songs(songfile):
+    """
+    init_songs
+
+    Reads songs from json and adds them to music table
+    """
+
+    with open(songfile) as file:
+        data = json.load(file)
+
+    for song in data['songs']:
+        put_song(song['artist'], song['title'], song['year'], song['web_url'], song['img_url'])
 
 """
 USER CRUD Operations
@@ -219,7 +231,7 @@ def put_user(email, user_name, password):
 
     # return response
 
-def get_user(email):
+def get_user(email=None):
     """
     get_user
 
@@ -257,18 +269,19 @@ def get_users():
     except ClientError as e:
         print(e.response['Error']['Message'])
     else:
-        return response['Item']
+        return response
 
 
 """
 MUSIC CRUD Operations
 """
-def put_song(email, user_name, password):
+def put_song(artist, title, year, web_url, img_url):
     """
     put_song
 
     Adds the passed song details to the music table.
     """
+
     db = get_db()
     table = db.Table("music")
 
@@ -277,11 +290,13 @@ def put_song(email, user_name, password):
             TableName='music',
             Item=
             {
-                'email' : email,
+                'artist' : artist,
+                'title' : title,
                 'info' : 
                 {
-                    'user_name' : user_name,
-                    'password': password
+                    'year' : year,
+                    'web_url' : web_url,
+                    'img_url' : img_url
                 }
             }
         )
@@ -291,7 +306,7 @@ def put_song(email, user_name, password):
     except:
         click.echo('Error putting user')
 
-def get_song(title, artist):
+def get_song(artist=None, title=None):
     """
     get_song
 
@@ -311,7 +326,7 @@ def get_song(title, artist):
     table = db.Table("music")
 
     try:
-        response = table.get_item(Key={'title': title, 'artist': artist})
+        response = table.get_item(Key={'artist': artist, 'title': title})
     except ClientError as e:
         print(e.response['Error']['Message'])
     else:
@@ -332,4 +347,4 @@ def get_songs():
     except ClientError as e:
         print(e.response['Error']['Message'])
     else:
-        return response['Item']
+        return response
