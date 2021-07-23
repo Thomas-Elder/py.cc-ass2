@@ -1,6 +1,6 @@
 
-import os
-import json
+import os, json
+from pathlib import Path
 
 import boto3
 from botocore.exceptions import ClientError
@@ -67,7 +67,8 @@ def init_db():
     """
     click.echo('Initialising the database... ')
 
-    songfile = r"./a2.json"
+    base_path = Path(__file__).parent
+    songfile = (base_path / "a2.json").resolve()
 
     init_loginTable()
     init_musicTable()
