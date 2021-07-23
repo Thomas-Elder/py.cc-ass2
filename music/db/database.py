@@ -67,7 +67,7 @@ def init_db():
     """
     click.echo('Initialising the database... ')
 
-    songfile = r"C:\Users\thomb\dev\py\cc-ass2\music\db\a2.json"
+    songfile = r"./a2.json"
 
     init_loginTable()
     init_musicTable()
