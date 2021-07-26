@@ -8,9 +8,9 @@ import click
 from flask import current_app, g
 from flask.cli import with_appcontext
 
-#aws_access_key_id='ASIAZ27L7JUKTCNA4JHO'
-#aws_secret_access_key='hmdm2p1LxarHt3ZTDfeHIlWXWCMybK/dN+Spz9aO'
-
+"""
+DyanamoDB functions
+"""
 def get_db():
     """
     get_db
@@ -278,7 +278,6 @@ def get_users():
         print(f'Error getting users: {error}')
     else:
         return response
-
 
 """
 MUSIC CRUD Operations
