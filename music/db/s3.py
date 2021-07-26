@@ -19,13 +19,9 @@ def get_s3():
 
     if 's3' not in g:
 
-        if os.environ['FLASK_ENV'] == "dev":
-            g.s3 = boto3.resource('s3', endpoint_url="http://localhost:8042")
-
-        else:
-            g.s3 = boto3.resource(
-                        's3', 
-                        region_name="us-east-1")
+        g.s3 = boto3.resource(
+                    's3', 
+                    region_name="us-east-1")
 
     return g.s3
 
