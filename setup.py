@@ -24,6 +24,7 @@ setup(
         'waitress==2.0.0',
         'Werkzeug==2.0.1',
         'WTForms==2.3.3',
-        'python-dotenv==0.18.0'
+        'python-dotenv==0.18.0',
+        'requests==2.26.0'
     ],
 )
