@@ -8,8 +8,11 @@ def check_password(email: str, password: str) -> bool:
     Returns true if the password stored with the email matches.
     """
     user = get_user(email=email)
-    print(user)
-    return user['info']['password'] == password
+    
+    if user is None:
+        return False
+    else:
+        return user['info']['password'] == password
 
 def check_email_unique(email: str) -> bool:
     """
