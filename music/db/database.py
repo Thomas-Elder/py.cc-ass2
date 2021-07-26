@@ -20,15 +20,13 @@ def get_db():
 
     if 'db' not in g:
 
-        if os.environ['FLASK_ENV'] == "DEV":
+        if os.environ['FLASK_ENV'] == "dev":
             g.db = boto3.resource('dynamodb', endpoint_url="http://localhost:8042")
 
         else:
-            g.db = boto3.resource('dynamodb')
-            #aws_access_key_id=aws_access_key_id,
-            #aws_secret_access_key=aws_secret_access_key,
-            #endpoint_url="dynamodb.us-east-1.amazonaws.com", 
-            #region_name="us-east-1")
+            g.db = boto3.resource(
+                        'dynamodb', 
+                        region_name="us-east-1")
 
     return g.db
 
@@ -62,7 +60,7 @@ def init_db():
     """
     init_db
 
-    Initialises the database. 
+    Initialises the database.
     """
     click.echo('Initialising the database... ')
 
@@ -75,6 +73,9 @@ def init_db():
     init_users()
     init_songs(songfile)  
 
+    for user in get_users():
+        print(user)
+
     click.echo('Database initialised.')
 
 def init_loginTable():
@@ -85,7 +86,7 @@ def init_loginTable():
     """
     db = get_db()
     
-    # Get the table
+    # Get the table if it exists. 
     table = db.Table("login")
 
     click.echo('Creating log in table...')
@@ -113,10 +114,10 @@ def init_loginTable():
             }
         )
 
-    except:
+    except Exception as error:
         e = sys.exc_info()[0]
         print(e)
-        click.echo('Table exists already')
+        print(f'Table exists already: {error}')
 
     click.echo('Initialized the login table.')
     return table
@@ -228,9 +229,10 @@ def put_user(email, user_name, password):
 
         return response
 
-    except botocore.exceptions.ClientError as error:
-        e = error['Error']['Message']
-        click.echo(f'Error putting user:{e}')
+    except Exception as error:
+        print(f'Error putting user: {error}')
+
+    print(f'User added: {email}:{user_name}:{password}')
 
     # return response
 
@@ -253,10 +255,13 @@ def get_user(email=None):
 
     try:
         response = table.get_item(Key={'email': email})
-    except botocore.exceptions.ClientError as e:
-        print(e.response['Error']['Message'])
+    except Exception as error:
+        print(f'Error getting user: {error}')
     else:
-        return response['Item']
+        if 'Item' in response:
+            return response['Item']
+        else:
+            return None
 
 def get_users():
     """
@@ -269,8 +274,8 @@ def get_users():
 
     try:
         response = table.scan()['Items']
-    except botocore.exceptions.ClientError as e:
-        print(e.response['Error']['Message'])
+    except Exception as error:
+        print(f'Error getting users: {error}')
     else:
         return response
 
@@ -306,9 +311,8 @@ def put_song(artist, title, year, web_url, img_url):
 
         return response
 
-    except botocore.exceptions.ClientError as error:
-        e = error['Error']['Message']
-        click.echo(f'Error putting song:{e}')
+    except Exception as error:
+        print(f'Error putting song: {error}')
 
 def get_song(artist=None, title=None):
     """
@@ -331,10 +335,13 @@ def get_song(artist=None, title=None):
 
     try:
         response = table.get_item(Key={'artist': artist, 'title': title})
-    except botocore.exceptions.ClientError as e:
-        print(e.response['Error']['Message'])
+    except Exception as error:
+        print(f'Error getting song: {error}')
     else:
-        return response['Item']
+        if 'Item' in response:
+            return response['Item']
+        else:
+            return None
 
 def get_songs():
     """
@@ -348,7 +355,7 @@ def get_songs():
 
     try:
         response = table.scan()['Items']
-    except botocore.exceptions.ClientError as e:
-        print(e.response['Error']['Message'])
+    except Exception as error:
+        print(f'Error getting songs: {error}')
     else:
         return response
