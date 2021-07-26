@@ -107,8 +107,8 @@ def init_imgs(filename, bucket_name):
     with open(filename) as file:
         data = json.load(file)
 
-    for img in data['img_url']:
-        put_img(img, bucket_name)
+    for song in data['songs']:
+        put_img(song['img_url'], bucket_name)
 
 def put_img(img_url, bucket_name):
     """
