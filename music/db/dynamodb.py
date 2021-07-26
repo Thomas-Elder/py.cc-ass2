@@ -62,7 +62,7 @@ def init_db():
 
     Initialises the database.
     """
-    click.echo('Initialising the database... ')
+    print('Initialising the database... ')
 
     base_path = Path(__file__).parent
     songfile = (base_path / "a2.json").resolve()
@@ -76,7 +76,7 @@ def init_db():
     for user in get_users():
         print(user)
 
-    click.echo('Database initialised.')
+    print('Database initialised.')
 
 def init_loginTable():
     """
@@ -89,7 +89,7 @@ def init_loginTable():
     # Get the table if it exists. 
     table = db.Table("login")
 
-    click.echo('Creating log in table...')
+    print('Creating log in table...')
 
     try: 
 
@@ -115,11 +115,9 @@ def init_loginTable():
         )
 
     except Exception as error:
-        e = sys.exc_info()[0]
-        print(e)
         print(f'Table exists already: {error}')
 
-    click.echo('Initialized the login table.')
+    print('Initialized the login table.')
     return table
 
 def init_musicTable():
@@ -135,7 +133,7 @@ def init_musicTable():
     # Get the table
     table = db.Table("music")
 
-    click.echo('Creating music table...')
+    print('Creating music table...')
 
     try:
 
@@ -168,10 +166,10 @@ def init_musicTable():
             }
         )
     
-    except :
-        click.echo('Table exists already')
+    except Exception as error:
+        print(f'Table exists already: {error}')
 
-    click.echo('Initialized the music table.')
+    print('Initialized the music table.')
     return table
 
 def init_users():
