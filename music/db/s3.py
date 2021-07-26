@@ -22,7 +22,7 @@ def get_s3():
         g.s3 = boto3.resource(
                     's3', 
                     region_name="us-east-1")
-
+    
     return g.s3
 
 def close_s3(e=None):
@@ -59,14 +59,46 @@ def init_s3():
     """
     print('Initialising the s3 database... ')
 
+    # Set up bucket
+    bucket_name = "music_imgs"
+    create_bucket(bucket_name)
+
+    # DL/Upload images
     base_path = Path(__file__).parent
     filename = (base_path / "a2.json").resolve()
-
-    init_imgs(filename)  
+    init_imgs(filename, bucket_name)  
 
     print('s3 Database initialised.')
 
-def init_imgs(filename):
+def create_bucket(bucket_name):
+    """
+    create_bucket
+
+    Creates an s3 bucket
+    """
+
+    s3 = get_s3()
+
+    try:
+        print('\nCreating new bucket:', bucket_name)
+        bucket = s3.create_bucket(
+            Bucket=bucket_name,
+            CreateBucketConfiguration={
+                'LocationConstraint': "us-east-1"
+            }
+        )
+
+        bucket.wait_until_exists()
+        print(f'Bucket successfully created as {bucket_name} in "us-east-1"')
+
+    except Exception as error:
+        print(f'Error creating bucket: {error}')
+
+    else:
+        return bucket
+    
+
+def init_imgs(filename, bucket_name):
     """
     init_imgs
 
@@ -76,12 +108,14 @@ def init_imgs(filename):
         data = json.load(file)
 
     for img in data['img_url']:
-        put_img(img)
+        put_img(img, bucket_name)
 
-def put_img(img):
+def put_img(img_url, bucket_name):
     """
     put_imgs
 
     Uploads the passed img to the s3 bucket
     """
-    pass
+    s3 = get_s3()
+
+    s3.meta.client.upload_file(img_url, bucket_name, img_url)
