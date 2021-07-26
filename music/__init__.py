@@ -18,7 +18,8 @@ def create_app(test_config=None):
     app.register_blueprint(subscription.bp)
     app.register_blueprint(index.bp)
 
-    from .db import dynamodb
+    from .db import dynamodb, s3
     dynamodb.init_app(app)
+    s3.init_app(app)
 
     return app
