@@ -18,7 +18,7 @@ def create_app(test_config=None):
     app.register_blueprint(subscription.bp)
     app.register_blueprint(index.bp)
 
-    from .db import database
-    database.init_app(app)
+    from .db import dynamodb
+    dynamodb.init_app(app)
 
     return app

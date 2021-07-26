@@ -1,5 +1,5 @@
 
-from .database import get_user, get_users
+from .dynamodb import get_user, get_users
 
 def check_password(email: str, password: str) -> bool:
     """
