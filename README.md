@@ -69,3 +69,6 @@ https://docs.aws.amazon.com/amazondynamodb/latest/developerguide/GettingStarted.
 
 Dynamodb ref:
 https://dynobase.dev/dynamodb-python-with-boto3/
+
+s3 ref:
+https://boto3.amazonaws.com/v1/documentation/api/latest/guide/migrations3.html
