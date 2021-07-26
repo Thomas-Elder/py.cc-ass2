@@ -1,16 +1,15 @@
 
-import os, json
+import os, json, sys
 from pathlib import Path
 
-import boto3
-from botocore.exceptions import ClientError
+import boto3, botocore
 
 import click
 from flask import current_app, g
 from flask.cli import with_appcontext
 
-aws_access_key_id='ASIAZ27L7JUKTCNA4JHO'
-aws_secret_access_key='hmdm2p1LxarHt3ZTDfeHIlWXWCMybK/dN+Spz9aO'
+#aws_access_key_id='ASIAZ27L7JUKTCNA4JHO'
+#aws_secret_access_key='hmdm2p1LxarHt3ZTDfeHIlWXWCMybK/dN+Spz9aO'
 
 def get_db():
     """
@@ -25,11 +24,11 @@ def get_db():
             g.db = boto3.resource('dynamodb', endpoint_url="http://localhost:8042")
 
         else:
-            g.db = boto3.resource('dynamodb', 
-            aws_access_key_id=aws_access_key_id,
-            aws_secret_access_key=aws_secret_access_key,
+            g.db = boto3.resource('dynamodb')
+            #aws_access_key_id=aws_access_key_id,
+            #aws_secret_access_key=aws_secret_access_key,
             #endpoint_url="dynamodb.us-east-1.amazonaws.com", 
-            region_name="us-east-1")
+            #region_name="us-east-1")
 
     return g.db
 
@@ -115,6 +114,8 @@ def init_loginTable():
         )
 
     except:
+        e = sys.exc_info()[0]
+        print(e)
         click.echo('Table exists already')
 
     click.echo('Initialized the login table.')
@@ -227,8 +228,9 @@ def put_user(email, user_name, password):
 
         return response
 
-    except:
-        click.echo('Error putting user')
+    except botocore.exceptions.ClientError as error:
+        e = error['Error']['Message']
+        click.echo(f'Error putting user:{e}')
 
     # return response
 
@@ -251,7 +253,7 @@ def get_user(email=None):
 
     try:
         response = table.get_item(Key={'email': email})
-    except ClientError as e:
+    except botocore.exceptions.ClientError as e:
         print(e.response['Error']['Message'])
     else:
         return response['Item']
@@ -267,7 +269,7 @@ def get_users():
 
     try:
         response = table.scan()['Items']
-    except ClientError as e:
+    except botocore.exceptions.ClientError as e:
         print(e.response['Error']['Message'])
     else:
         return response
@@ -304,8 +306,9 @@ def put_song(artist, title, year, web_url, img_url):
 
         return response
 
-    except:
-        click.echo('Error putting user')
+    except botocore.exceptions.ClientError as error:
+        e = error['Error']['Message']
+        click.echo(f'Error putting song:{e}')
 
 def get_song(artist=None, title=None):
     """
@@ -328,7 +331,7 @@ def get_song(artist=None, title=None):
 
     try:
         response = table.get_item(Key={'artist': artist, 'title': title})
-    except ClientError as e:
+    except botocore.exceptions.ClientError as e:
         print(e.response['Error']['Message'])
     else:
         return response['Item']
@@ -345,7 +348,7 @@ def get_songs():
 
     try:
         response = table.scan()['Items']
-    except ClientError as e:
+    except botocore.exceptions.ClientError as e:
         print(e.response['Error']['Message'])
     else:
         return response
