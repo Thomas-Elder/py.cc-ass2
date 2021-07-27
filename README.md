@@ -47,11 +47,10 @@ source venv/bin/activate
 
 ### install
 pip install music-1.0.0-py3-none-any.whl
-export FLASK_APP=[music]
-
 Note that music is install by default in venv/lib/python3.8/site-packages/music
 
 ### init
+flask init_s3
 flask init_db
 
 ### run 
