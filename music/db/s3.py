@@ -1,5 +1,6 @@
 import os, json, sys
 from pathlib import Path
+import requests
 
 import boto3, botocore
 
@@ -97,7 +98,6 @@ def create_bucket(bucket_name):
     else:
         return bucket
     
-
 def init_imgs(filename, bucket_name):
     """
     init_imgs
@@ -108,9 +108,16 @@ def init_imgs(filename, bucket_name):
         data = json.load(file)
 
     for song in data['songs']:
-        put_img(song['img_url'], bucket_name)
+        response = requests.get(song['img_url'])
 
-def put_img(img_url, bucket_name):
+        if response.status_code == 200:
+            filepath = 0
+            put_img(filepath, bucket_name)
+
+        else:
+            print(f'Error downloading image error: {response.status_code}')
+
+def put_img(filepath, bucket_name):
     """
     put_imgs
 
@@ -118,4 +125,6 @@ def put_img(img_url, bucket_name):
     """
     s3 = get_s3()
 
-    s3.meta.client.upload_file(img_url, bucket_name, img_url)
+    filename = os.path.split()[1]
+
+    s3.Object(bucket_name, filename).put(Body=open(filepath, 'rb'))
