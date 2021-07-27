@@ -61,12 +61,16 @@ def init_s3():
     print('Initialising the s3 database... ')
 
     # Set up bucket
-    bucket_name = "music_imgs"
+    bucket_name = "Assignment2Images"
     create_bucket(bucket_name)
 
     # DL/Upload images
     base_path = Path(__file__).parent
     filename = (base_path / "a2.json").resolve()
+
+    # Set up tmp_img dir
+    os.mkdir(os.path.join(Path(__file__).parent, 'tmp_img')) 
+
     init_imgs(filename, bucket_name)  
 
     print('s3 Database initialised.')
@@ -80,23 +84,24 @@ def create_bucket(bucket_name):
 
     s3 = get_s3()
 
-    try:
-        print('\nCreating new bucket:', bucket_name)
-        bucket = s3.create_bucket(
-            Bucket=bucket_name,
-            CreateBucketConfiguration={
-                'LocationConstraint': "us-east-1"
-            }
-        )
+    if s3.Bucket(bucket_name) in s3.buckets.all():
+        print(f'{bucket_name} already exists.')
+        return s3.Bucket(bucket_name)
 
-        bucket.wait_until_exists()
-        print(f'Bucket successfully created as {bucket_name} in "us-east-1"')
+    else: 
 
-    except Exception as error:
-        print(f'Error creating bucket: {error}')
+        try:
+            print(f'Creating new bucket:{bucket_name}')
+            bucket = s3.create_bucket(Bucket=bucket_name)
 
-    else:
-        return bucket
+            bucket.wait_until_exists()
+            print(f'Bucket successfully created as {bucket_name} in "us-east-1"')
+
+        except Exception as error:
+            print(f'Error creating bucket: {error}')
+
+        else:
+            return bucket
     
 def init_imgs(filename, bucket_name):
     """
@@ -104,6 +109,7 @@ def init_imgs(filename, bucket_name):
 
     Reads data from json and adds images to the s3 bucket
     """
+
     with open(filename) as file:
         data = json.load(file)
 
@@ -111,20 +117,24 @@ def init_imgs(filename, bucket_name):
         response = requests.get(song['img_url'])
 
         if response.status_code == 200:
-            filepath = 0
-            put_img(filepath, bucket_name)
+
+            filename = os.path.split(song['img_url'])[1]
+            print(filename)
+            with open(os.path.join('tmp_img/', filename), 'wb') as file:
+                file.write(response.content)
+
+            put_img('tmp_img/', filename, bucket_name)
 
         else:
             print(f'Error downloading image error: {response.status_code}')
 
-def put_img(filepath, bucket_name):
+def put_img(path, filename, bucket_name):
     """
     put_imgs
 
     Uploads the passed img to the s3 bucket
     """
     s3 = get_s3()
-
-    filename = os.path.split()[1]
-
-    s3.Object(bucket_name, filename).put(Body=open(filepath, 'rb'))
+    print(path)
+    print(filename)
+    s3.Object(bucket_name, filename).put(Body=open(os.path.join(path, filename), 'rb'))
