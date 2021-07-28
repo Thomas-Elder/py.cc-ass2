@@ -128,6 +128,9 @@ def init_imgs(filename, bucket_name):
         else:
             print(f'Error downloading image error: {response.status_code}')
 
+"""
+IMG CRUD Operations
+"""
 def put_img(path, filename, bucket_name):
     """
     put_imgs
@@ -138,3 +141,11 @@ def put_img(path, filename, bucket_name):
     print(path)
     print(filename)
     s3.Object(bucket_name, filename).put(Body=open(os.path.join(path, filename), 'rb'))
+
+def get_img(artist=None):
+    """
+    get_img
+
+    Returns the public url of the image matching the passed artist-string. 
+    If no artist is passed then returns all img urls
+    """
