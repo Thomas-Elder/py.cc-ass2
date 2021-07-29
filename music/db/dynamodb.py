@@ -281,7 +281,11 @@ def get_users():
     except Exception as error:
         print(f'Error getting users: {error}')
     else:
-        return response
+        users = []
+        for record in response:
+            users.append(User(record['email'], record['email'], record['info']['user_name'], record['info']['password']))
+
+        return users
 
 """
 MUSIC CRUD Operations
