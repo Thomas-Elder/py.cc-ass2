@@ -1,6 +1,8 @@
 
 from flask import Blueprint, flash, g, redirect, render_template, request, session, url_for
+from flask_login import login_user, logout_user, login_required, current_user
 
+from ..db.dynamodb import get_user
 from .forms import LoginForm, RegisterForm
 
 bp = Blueprint('authentication', __name__, url_prefix='/authentication')
@@ -31,7 +33,7 @@ def login():
     if request.method == 'POST':
 
         if form.validate_on_submit():
-
+            login_user(get_user(form.email.data))
             return redirect(url_for('subscription.music'))
 
         else:
@@ -41,6 +43,7 @@ def login():
         return render_template('authentication/login.html', form=form)   
 
 @bp.route('/logout', methods=['GET', 'POST'])
+@login_required
 def logout():
-
+    logout_user()
     return redirect(url_for('index'))
