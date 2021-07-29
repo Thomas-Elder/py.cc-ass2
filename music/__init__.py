@@ -11,8 +11,6 @@ def create_app(test_config=None):
     loginManager = LoginManager(app)
     loginManager.login_view = 'authentication/login'
 
-    
-
     from .routes import authentication, subscription, index
     app.register_blueprint(authentication.bp)
     app.register_blueprint(subscription.bp)
@@ -20,7 +18,7 @@ def create_app(test_config=None):
 
     from .db import dynamodb, s3
     dynamodb.init_app(app)
-    s3.init_app(app)
+    s3.init_app(app)    
 
     @loginManager.user_loader
     def load_user(id):
