@@ -1,12 +1,16 @@
 
 import os, json, sys
+
 from pathlib import Path
 
 import boto3, botocore
 
 import click
+
 from flask import current_app, g
 from flask.cli import with_appcontext
+
+from ..models.user import User
 
 """
 DyanamoDB functions
@@ -257,7 +261,9 @@ def get_user(email=None):
         print(f'Error getting user: {error}')
     else:
         if 'Item' in response:
-            return response['Item']
+
+            return User(response['Item']['email'], response['Item']['email'], response['Item']['info']['user_name'], response['Item']['info']['password'])
+
         else:
             return None
 
