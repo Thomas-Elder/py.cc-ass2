@@ -6,8 +6,12 @@ First run docker-compose script to get dynamodb running locally:
 
 docker-compose -f dynamodb/docker-compose.yaml up -d
 
-### Then initialise the db:
+### Then initialise the dbs:
 flask init_db
+
+### Initialise s3
+flask init_s3
+This only needs to be done once. Also this only runs from the ec2 instance, permissions are not set for this to be run from the local instance.
 
 ### Then run the flask app:
 flask run
