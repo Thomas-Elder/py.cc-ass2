@@ -149,3 +149,12 @@ def get_img(artist=None):
     Returns the public url of the image matching the passed artist-string. 
     If no artist is passed then returns all img urls
     """
+    s3 = get_s3()
+
+    bucket_name = 'my_bucket'
+    my_bucket = s3.Bucket(bucket_name)
+
+    for file in my_bucket.objects.all():
+        params = {'Bucket': bucket_name, 'Key': file.key}
+        url = s3.meta.client.generate_presigned_url('get_object', params)
+        print(url)
