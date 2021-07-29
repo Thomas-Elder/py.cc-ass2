@@ -61,7 +61,7 @@ def init_s3():
     print('Initialising the s3 database... ')
 
     # Set up bucket
-    bucket_name = "Assignment2Images"
+    bucket_name = "assignment2images"
     create_bucket(bucket_name)
 
     # DL/Upload images
@@ -151,7 +151,7 @@ def get_img(artist=None):
     """
     s3 = get_s3()
 
-    bucket_name = 'my_bucket'
+    bucket_name = 'assignment2images'
     my_bucket = s3.Bucket(bucket_name)
 
     for file in my_bucket.objects.all():
