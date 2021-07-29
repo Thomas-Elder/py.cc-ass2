@@ -12,7 +12,7 @@ def check_password(email: str, password: str) -> bool:
     if user is None:
         return False
     else:
-        return user['info']['password'] == password
+        return user.password == password
 
 def check_email_unique(email: str) -> bool:
     """
