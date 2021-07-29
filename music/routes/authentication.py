@@ -19,10 +19,10 @@ def register():
             return redirect(url_for('authentication.login'))
 
         else:
-            return render_template('authentication/register.html', form=form)
+            return render_template('authentication/register.html', current_user=current_user, form=form)
 
     else:
-        return render_template('authentication/register.html', form=form)
+        return render_template('authentication/register.html', current_user=current_user, form=form)
 
 
 @bp.route('/login', methods=['GET', 'POST'])
@@ -37,10 +37,10 @@ def login():
             return redirect(url_for('subscription.music'))
 
         else:
-            return render_template('authentication/login.html', form=form)   
+            return render_template('authentication/login.html', current_user=current_user, form=form)   
 
     else:
-        return render_template('authentication/login.html', form=form)   
+        return render_template('authentication/login.html', current_user=current_user, form=form)   
 
 @bp.route('/logout', methods=['GET', 'POST'])
 @login_required
