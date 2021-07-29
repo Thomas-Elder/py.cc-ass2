@@ -2,4 +2,5 @@ graft music/static
 graft music/templates
 graft music/db
 graft music/routes
+graft music/models
 global-exclude *.pyc
