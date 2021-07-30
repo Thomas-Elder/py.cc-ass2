@@ -1,3 +1,4 @@
+from boto3.docs.docstring import AttributeDocstring
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, TextAreaField, PasswordField
 from flask_wtf.file import FileField, FileRequired
@@ -45,3 +46,9 @@ class LoginForm(FlaskForm):
 
             self.password.errors.append('email or password is invalid')
             return False
+
+class QueryForm(FlaskForm):
+    artist = StringField('artist') 
+    title = StringField('title')
+    year = StringField('year')
+    search = SubmitField('search')
