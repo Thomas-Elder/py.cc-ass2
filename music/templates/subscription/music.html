@@ -4,13 +4,12 @@
 <div class="container">
     <h3>Music Subscription App Main Page</h3>
     <h5>Subscription area</h5>
-    subscription stuff
-    <h5>Query area</h5>
+    User: {{ current_user.username }}
 
     {% for song in songs %}
     <div class="card">
         <div class="media">
-            <img src="{{song.img_url}}" class="mr-3" alt="{{song.img_url}}">
+            <img src="{{song.img_url}}" class="mr-3 img-thumbnail" width="100" alt="{{song.img_url}}">
             <div class="media-body">
                 {{song.artist}}
                 {{song.title}}
@@ -20,5 +19,35 @@
         </div>
     </div>
     {% endfor %}
+
+    <h5>Query area</h5>
+    <form action="" method="post" novalidate>
+        {{ form.hidden_tag() }}
+        <div>
+            {{ form.artist.label }}<br>
+            {{ form.artist(size=32) }}<br>
+            {% for error in form.artist.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </div>
+        <div>
+            {{ form.title.label }}<br>
+            {{ form.title(size=32) }}<br>
+            {% for error in form.title.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </div>
+        <div>
+            {{ form.year.label }}<br>
+            {{ form.year(size=32) }}<br>
+            {% for error in form.year.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </div>
+        <div>
+            {{ form.search(class_="btn btn-primary") }}
+        </div>
+    </form>
+    
 </div>
 {% endblock %}
