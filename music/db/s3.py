@@ -154,7 +154,22 @@ def get_img(artist=None):
     bucket_name = 'assignment2images'
     my_bucket = s3.Bucket(bucket_name)
 
-    for file in my_bucket.objects.all():
-        params = {'Bucket': bucket_name, 'Key': file.key}
+    if artist is not None:
+        artist_key = artist + '.jpg'
+        params = {'Bucket': bucket_name, 'Key': artist_key}
         url = s3.meta.client.generate_presigned_url('get_object', params)
-        print(url)
+        final_url = url.split('?')[0].replace("%20", "")
+        return final_url
+
+    
+    else: 
+
+        urls = []
+        
+        for file in my_bucket.objects.all():
+            params = {'Bucket': bucket_name, 'Key': file.key}
+            url = s3.meta.client.generate_presigned_url('get_object', params)
+            urls.append(url.split('?')[0])
+
+        return urls
+    
