@@ -2,7 +2,7 @@
 from flask import Blueprint, flash, g, redirect, render_template, request, session, url_for
 from flask_login import login_user, logout_user, login_required, current_user
 
-from ..db.dynamodb import get_user
+from ..db.dynamodb import get_user, put_user
 from .forms import LoginForm, RegisterForm
 
 bp = Blueprint('authentication', __name__, url_prefix='/authentication')
@@ -15,7 +15,7 @@ def register():
     if request.method == 'POST':
 
         if form.validate_on_submit():
-
+            put_user(form.email.data, form.username.data, form.password.data)
             return redirect(url_for('authentication.login'))
 
         else:
