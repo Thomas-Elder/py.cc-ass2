@@ -6,6 +6,19 @@
     <h5>Subscription area</h5>
     subscription stuff
     <h5>Query area</h5>
-    query stuff
+
+    {% for song in songs %}
+    <div class="card">
+        <div class="media">
+            <img src="{{song.img_url}}" class="mr-3" alt="{{song.img_url}}">
+            <div class="media-body">
+                {{song.artist}}
+                {{song.title}}
+                {{song.year}}
+                {{song.web_url}}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
 </div>
 {% endblock %}
