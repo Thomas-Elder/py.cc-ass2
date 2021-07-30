@@ -22,4 +22,4 @@ def check_email_unique(email: str) -> bool:
     """
     user = get_user(email)
 
-    return not user is None
+    return user is None
