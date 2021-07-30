@@ -11,6 +11,7 @@ from flask import current_app, g
 from flask.cli import with_appcontext
 
 from ..models.user import User
+from ..models.song import Song
 
 """
 DyanamoDB functions
@@ -365,4 +366,8 @@ def get_songs():
     except Exception as error:
         print(f'Error getting songs: {error}')
     else:
-        return response
+        songs = []
+        for record in response:
+            songs.append(Song(record['artist'], record['artist'], record['info']['year'], record['info']['web_url']))
+            
+        return songs
