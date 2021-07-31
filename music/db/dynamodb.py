@@ -345,7 +345,7 @@ def get_song(artist=None, title=None):
         print(f'Error getting song: {error}')
     else:
         if 'Item' in response:
-            return response['Item']
+            return Song(response['artist'], response['title'], response['year'], response['web_url'])
         else:
             return None
 
