@@ -112,6 +112,7 @@ def init_loginTable():
                     'AttributeName': 'email',
                     'AttributeType': 'S'
                 },
+                
             ],
             ProvisionedThroughput={
                 'ReadCapacityUnits': 10,
@@ -184,12 +185,13 @@ def init_users():
     Adds the default users to the Users table.
     """
     emails = ['s33750870@student.rmit.edu.au', 's33750871@student.rmit.edu.au', 's33750872@student.rmit.edu.au', 's33750873@student.rmit.edu.au', 's33750874@student.rmit.edu.au', 's33750875@student.rmit.edu.au', 's33750876@student.rmit.edu.au', 's33750877@student.rmit.edu.au','s33750878@student.rmit.edu.au','s33750879@student.rmit.edu.au']
-    user_names = ['Tom Elder0', 'Tom Elder1', 'Tom Elder2', 'Tom Elder3', 'Tom Elder4', 'Tom Elder5', 'Tom Elder6', 'Tom Elder7', 'Tom Elder8', 'Tom Elder9']
+    usernames = ['Tom Elder0', 'Tom Elder1', 'Tom Elder2', 'Tom Elder3', 'Tom Elder4', 'Tom Elder5', 'Tom Elder6', 'Tom Elder7', 'Tom Elder8', 'Tom Elder9']
     passwords = ['012345', '123456', '234567', '345678', '456789', '567890', '678901', '789012', '890123', '901234']
+    usersongs = []
 
     # users
-    for email, user_name, password in zip(emails, user_names, passwords):
-        put_user(email, user_name, password)
+    for email, username, password in zip(emails, usernames, passwords):
+        put_user(email, username, password, usersongs)
 
 def init_songs(songfile):
     """
@@ -207,7 +209,7 @@ def init_songs(songfile):
 """
 USER CRUD Operations
 """
-def put_user(email, user_name, password):
+def put_user(email, username, password, usersongs):
     """
     put_user
 
@@ -222,11 +224,10 @@ def put_user(email, user_name, password):
             Item=
             {
                 'email' : email,
-                'info' : 
-                {
-                    'user_name' : user_name,
-                    'password': password
-                }
+                'username' : username,
+                'password': password,
+                'usersongs': usersongs
+
             }
         )
 
@@ -235,7 +236,7 @@ def put_user(email, user_name, password):
     except Exception as error:
         print(f'Error putting user: {error}')
 
-    print(f'User added: {email}:{user_name}:{password}')
+    print(f'User added: {email}:{username}:{password}')
 
     # return response
 
@@ -263,7 +264,7 @@ def get_user(email=None):
     else:
         if 'Item' in response:
 
-            return User(response['Item']['email'], response['Item']['email'], response['Item']['info']['user_name'], response['Item']['info']['password'])
+            return User(response['Item']['email'], response['Item']['email'], response['Item']['username'], response['Item']['password'], response['Item']['usersongs'])
 
         else:
             return None
@@ -284,7 +285,7 @@ def get_users():
     else:
         users = []
         for record in response:
-            users.append(User(record['email'], record['email'], record['info']['user_name'], record['info']['password']))
+            users.append(User(record['email'], record['email'], record['username'], record['password'], record['usersongs']))
 
         return users
 
