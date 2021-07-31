@@ -51,4 +51,4 @@ class QueryForm(FlaskForm):
     artist = StringField('artist') 
     title = StringField('title')
     year = StringField('year')
-    search = SubmitField('search')
+    search = SubmitField('query')
