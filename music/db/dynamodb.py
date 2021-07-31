@@ -372,3 +372,32 @@ def get_songs():
             songs.append(Song(record['artist'], record['artist'], record['info']['year'], record['info']['web_url']))
             
         return songs
+
+"""
+SUBSCRIPTION CRUD Operations
+"""
+def get_user_songs(useremail):
+    """
+    Returns the list of songs the user has subscribed to.
+    """
+    user = get_user(useremail)
+    return user.usersongs
+
+def put_user_song(useremail, songtitle, songartist):
+    """
+    Adds the given song to the users usersong table entry.
+    """
+    user = get_user(useremail)
+    user.usersongs.append({'title': songtitle, 'artist': songartist})
+    put_user(user.email, user.username, user.password, user.usersongs)
+
+def rm_user_song(useremail, songtitle, songartist):
+    """
+    Removes the given song to the users usersong table entry.
+    """
+    user = get_user(useremail)
+
+    temp = list(filter(lambda song: song['title'] != songtitle and song['artist'] != songartist, user.usersongs))
+
+    put_user(user.email, user.username, user.password, temp)
+            
