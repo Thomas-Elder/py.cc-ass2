@@ -4,7 +4,7 @@ from flask import Blueprint, flash, g, redirect, render_template, request, sessi
 from flask_login import current_user
 
 from ..db.s3 import get_img
-from ..db.dynamodb import get_songs
+from ..db.dynamodb import get_songs, get_user_songs
 from .forms import QueryForm
 
 bp = Blueprint('subscription', __name__, url_prefix='/subscription')
@@ -17,7 +17,7 @@ def music():
     query_songs = []
 
     # get user songs and images:
-    user_songs = get_songs() #list
+    user_songs = get_user_songs(current_user.email) #list
 
     if os.environ['FLASK_ENV'] == "dev":
             for song in user_songs:
@@ -35,7 +35,7 @@ def music():
         if form.validate_on_submit():
 
             # get query songs
-
+            query_songs = get_songs(form.artist.data, form.title.data, form.year.data)
             return render_template('subscription/music.html', current_user=current_user, user_songs=user_songs, query_songs=query_songs, form=form)
 
         else:
