@@ -11,16 +11,32 @@ bp = Blueprint('subscription', __name__, url_prefix='/subscription')
 
 @bp.route('/music', methods=("GET", "POST"))
 def music():
-    
     form = QueryForm()
 
-    songs = get_songs() #list
+    # set up query_songs
+    query_songs = []
+
+    # get user songs and images:
+    user_songs = get_songs() #list
 
     if os.environ['FLASK_ENV'] == "dev":
-        for song in songs:
-            song.img_url = "https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Test-Logo.svg/783px-Test-Logo.svg.png"
+            for song in user_songs:
+                song.img_url = "https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Test-Logo.svg/783px-Test-Logo.svg.png"
     else:
-        for song in songs:
+        for song in user_songs:
             song.img_url = get_img(song.artist)
 
-    return render_template('subscription/music.html', current_user=current_user, songs=songs, form=form)
+    if request.method == 'GET':
+        
+        return render_template('subscription/music.html', current_user=current_user, user_songs=user_songs, query_songs=query_songs, form=form)
+
+    elif request.method == 'POST':
+
+        if form.validate_on_submit():
+
+            # get query songs
+
+            return render_template('subscription/music.html', current_user=current_user, user_songs=user_songs, query_songs=query_songs, form=form)
+
+        else:
+            return render_template('subscription/music.html', current_user=current_user, user_songs=user_songs, query_songs=query_songs, form=form)
