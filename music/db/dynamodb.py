@@ -379,13 +379,6 @@ def get_user_songs(useremail):
     """
     user = get_user(useremail)
 
-    # testing... 
-    put_user_song(useremail, "Jack Johnson", "Banana Pancakes")
-    put_user_song(useremail, "Jimmy Buffett", "Barefoot Children")
-    put_user_song(useremail, "The Lumineers", "Big Parade")
-
-    rm_user_song(useremail, "The Lumineers", "Big Parade")
-
     songs = []
     for record in user.usersongs:
         song = get_song(artist=record['artist'], title=record['title'])
