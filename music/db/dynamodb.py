@@ -366,7 +366,7 @@ def get_songs(artist=None, title=None, year=None):
     else:
         songs = []
         for record in response:
-            songs.append(Song(record['artist'], record['artist'], record['year'], record['web_url']))
+            songs.append(Song(record['artist'], record['title'], record['year'], record['web_url']))
             
         return songs
 
@@ -382,7 +382,7 @@ def get_user_songs(useremail):
     songs = []
     for record in user.usersongs:
         song = get_song(artist=record['artist'], title=record['title'])
-        songs.append(Song(song['artist'], song['artist'], song['year'], song['web_url']))
+        songs.append(Song(song['artist'], song['title'], song['year'], song['web_url']))
 
     return songs
 
