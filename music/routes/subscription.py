@@ -9,12 +9,13 @@ from .forms import QueryForm
 
 bp = Blueprint('subscription', __name__, url_prefix='/subscription')
 
+@bp.route('/music/query_songs', methods=["GET"])
 @bp.route('/music', methods=["GET"])
-def music():
+def music(query_songs=None):
     form = QueryForm()
 
     # set up query_songs
-    query_songs = []
+    #query_songs = []
 
     # get user songs and images:
     user_songs = get_user_songs(current_user.email) #list
@@ -63,4 +64,4 @@ def query():
     query_songs = get_songs(artist=request.form['artist'], title=request.form['title'], year=request.form['year'])
 
     # redirect to music  
-    return redirect(url_for('subscription.music'))
+    return redirect(url_for('subscription.music', query_songs=query_songs))
