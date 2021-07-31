@@ -4,12 +4,12 @@ from flask import Blueprint, flash, g, redirect, render_template, request, sessi
 from flask_login import current_user
 
 from ..db.s3 import get_img
-from ..db.dynamodb import get_songs, get_user_songs
+from ..db.dynamodb import get_songs, get_user_songs, rm_user_song, put_user_song
 from .forms import QueryForm
 
 bp = Blueprint('subscription', __name__, url_prefix='/subscription')
 
-@bp.route('/music', methods=("GET", "POST"))
+@bp.route('/music', methods=["GET"])
 def music():
     form = QueryForm()
 
@@ -19,6 +19,7 @@ def music():
     # get user songs and images:
     user_songs = get_user_songs(current_user.email) #list
 
+    # If we're local, use place holder images.
     if os.environ['FLASK_ENV'] == "dev":
             for song in user_songs:
                 song.img_url = "https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Test-Logo.svg/783px-Test-Logo.svg.png"
@@ -26,17 +27,40 @@ def music():
         for song in user_songs:
             song.img_url = get_img(song.artist)
 
-    if request.method == 'GET':
-        
-        return render_template('subscription/music.html', current_user=current_user, user_songs=user_songs, query_songs=query_songs, form=form)
+    return render_template('subscription/music.html', current_user=current_user, user_songs=user_songs, query_songs=query_songs, form=form)
 
-    elif request.method == 'POST':
 
-        if form.validate_on_submit():
+@bp.route('/music/remove', methods=["POST"])
+def remove():
 
-            # get query songs
-            query_songs = get_songs(form.artist.data, form.title.data, form.year.data)
-            return render_template('subscription/music.html', current_user=current_user, user_songs=user_songs, query_songs=query_songs, form=form)
+    # parse request
+    print(f"Removing: {request.form['artist']}:{request.form['title']}")
 
-        else:
-            return render_template('subscription/music.html', current_user=current_user, user_songs=user_songs, query_songs=query_songs, form=form)
+    # remove song 
+    rm_user_song(current_user.email, request.form['artist'], request.form['title'])
+
+    # redirect to music
+    return redirect(url_for('subscription.music'))
+
+@bp.route('/music/subscribe', methods=["POST"])
+def subscribe():
+
+    # parse request
+    print(f"Subscribing: {request.form['artist']}:{request.form['title']}")
+
+    # add song 
+    put_user_song(current_user.email, request.form['artist'], request.form['title']) 
+
+    # redirect to music  
+    return redirect(url_for('subscription.music'))
+
+@bp.route('/music/query', methods=["POST"])
+def query():
+    # parse request
+    print(f"Subscribing: {request.form['artist']}:{request.form['title']}:{request.form['year']}")
+
+    # query db
+    query_songs = get_songs(artist=request.form['artist'], title=request.form['title'], year=request.form['year'])
+
+    # redirect to music  
+    return redirect(url_for('subscription.music'))
