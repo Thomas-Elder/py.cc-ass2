@@ -16,13 +16,17 @@
                 {{song.year}}
                 {{song.web_url}}
             </div>
-            <button class="btn-primary">Remove</button>
+            <form action="{{url_for('subscription.remove')}}" method="POST">
+                <input type="hidden" value="{{song.artist}}" name="artist">
+                <input type="hidden" value="{{song.title}}" name="title">
+                <button type="submit"class="btn-primary">Remove</button>
+            </form>
         </div>
     </div>
     {% endfor %}
 
     <h5>Query area</h5>
-    <form action="" method="post" novalidate>
+    <form action="{{url_for('subscription.query')}}" method="POST">
         {{ form.hidden_tag() }}
         <div>
             {{ form.artist.label }}<br>
@@ -59,7 +63,11 @@
                 {{song.year}}
                 {{song.web_url}}
             </div>
-            <button class="btn-primary">Subscribe</button>
+            <form action="{{url_for('subscription.subscribe')}}" method="POST">
+                <input type="hidden" value="{{song.artist}}" name="artist">
+                <input type="hidden" value="{{song.title}}" name="title">
+                <button type="submit"class="btn-primary">Subscribe</button>
+            </form>
         </div>
     </div>
     {% endfor %}
