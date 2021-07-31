@@ -309,12 +309,9 @@ def put_song(artist, title, year, web_url, img_url):
             {
                 'artist' : artist,
                 'title' : title,
-                'info' : 
-                {
-                    'year' : year,
-                    'web_url' : web_url,
-                    'img_url' : img_url
-                }
+                'year' : year,
+                'web_url' : web_url,
+                'img_url' : img_url
             }
         )
 
@@ -352,7 +349,7 @@ def get_song(artist=None, title=None):
         else:
             return None
 
-def get_songs():
+def get_songs(artist=None, title=None, year=None):
     """
     get_songs
     
@@ -369,7 +366,7 @@ def get_songs():
     else:
         songs = []
         for record in response:
-            songs.append(Song(record['artist'], record['artist'], record['info']['year'], record['info']['web_url']))
+            songs.append(Song(record['artist'], record['artist'], record['year'], record['web_url']))
             
         return songs
 
@@ -381,17 +378,31 @@ def get_user_songs(useremail):
     Returns the list of songs the user has subscribed to.
     """
     user = get_user(useremail)
-    return user.usersongs
 
-def put_user_song(useremail, songtitle, songartist):
+    # testing... 
+    put_user_song(useremail, "Jack Johnson", "Banana Pancakes")
+    put_user_song(useremail, "Jimmy Buffett", "Barefoot Children")
+    put_user_song(useremail, "The Lumineers", "Big Parade")
+
+    rm_user_song(useremail, "The Lumineers", "Big Parade")
+
+    songs = []
+    for record in user.usersongs:
+        song = get_song(artist=record['artist'], title=record['title'])
+        print(song)
+        songs.append(Song(song['artist'], song['artist'], song['year'], song['web_url']))
+
+    return songs
+
+def put_user_song(useremail, songartist, songtitle):
     """
     Adds the given song to the users usersong table entry.
     """
     user = get_user(useremail)
-    user.usersongs.append({'title': songtitle, 'artist': songartist})
+    user.usersongs.append({'artist': songartist, 'title': songtitle})
     put_user(user.email, user.username, user.password, user.usersongs)
 
-def rm_user_song(useremail, songtitle, songartist):
+def rm_user_song(useremail, songartist, songtitle):
     """
     Removes the given song to the users usersong table entry.
     """
