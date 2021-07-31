@@ -382,7 +382,6 @@ def get_user_songs(useremail):
     songs = []
     for record in user.usersongs:
         song = get_song(artist=record['artist'], title=record['title'])
-        print(song)
         songs.append(Song(song['artist'], song['artist'], song['year'], song['web_url']))
 
     return songs
