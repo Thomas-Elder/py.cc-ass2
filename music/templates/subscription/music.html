@@ -53,23 +53,28 @@
             {{ form.search(class_="btn btn-primary") }}
         </div>
     </form>
-    {% for song in query_songs %}
-    <div class="card">
-        <div class="media">
-            <img src="{{song.img_url}}" class="mr-3 img-thumbnail" width="100" alt="{{song.img_url}}">
-            <div class="media-body">
-                {{song.artist}}
-                {{song.title}}
-                {{song.year}}
-                {{song.web_url}}
+
+    {% if session['query_songs']|length == 0 %}
+            <div>No result is retrieved. Please query again.</div>
+    {% endif %}
+    {% for song in session.pop('query_songs', []) %}
+        
+        <div class="card">
+            <div class="media">
+                <img src="{{song['img_url']}}" class="mr-3 img-thumbnail" width="100" alt="{{song['img_url']}}">
+                <div class="media-body">
+                    {{song['artist']}}
+                    {{song['title']}}
+                    {{song['year']}}
+                    {{song['web_url']}}
+                </div>
+                <form action="{{url_for('subscription.subscribe')}}" method="POST">
+                    <input type="hidden" value="{{song['artist']}}" name="artist">
+                    <input type="hidden" value="{{song['title']}}" name="title">
+                    <button type="submit"class="btn-primary">Subscribe</button>
+                </form>
             </div>
-            <form action="{{url_for('subscription.subscribe')}}" method="POST">
-                <input type="hidden" value="{{song.artist}}" name="artist">
-                <input type="hidden" value="{{song.title}}" name="title">
-                <button type="submit"class="btn-primary">Subscribe</button>
-            </form>
         </div>
-    </div>
     {% endfor %}
 </div>
 {% endblock %}
