@@ -345,7 +345,8 @@ def get_song(artist=None, title=None):
         print(f'Error getting song: {error}')
     else:
         if 'Item' in response:
-            return Song(response['artist'], response['title'], response['year'], response['web_url'])
+            #print(response['Item'])
+            return Song(response['Item']['artist'], response['Item']['title'], response['Item']['year'], response['Item']['web_url'])
         else:
             return None
 
@@ -365,9 +366,22 @@ def get_songs(artist=None, title=None, year=None):
         print(f'Error getting songs: {error}')
     else:
         songs = []
+
         for record in response:
             songs.append(Song(record['artist'], record['title'], record['year'], record['web_url']))
-            
+          
+        if artist != "":
+            print(f'querying on artist:{artist}')
+            songs = list(filter(lambda song: song.artist == artist, songs))
+
+        if title != "":
+            print(f'querying on title:{title}')
+            songs = list(filter(lambda song: song.title == title, songs))
+
+        if year != "":
+            print(f'querying on year:{year}')
+            songs = list(filter(lambda song: song.year == year, songs))
+
         return songs
 
 """
@@ -382,7 +396,7 @@ def get_user_songs(useremail):
     songs = []
     for record in user.usersongs:
         song = get_song(artist=record['artist'], title=record['title'])
-        songs.append(Song(song['artist'], song['title'], song['year'], song['web_url']))
+        songs.append(song)
 
     return songs
 
