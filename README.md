@@ -1,4 +1,5 @@
 # Music
+A simple application allowing users to register, log in and query a list of music. They can then subscribe to any song and view a list of a subscribed items. 
 
 ## Running locally
 ### Dynamodb 
@@ -17,8 +18,6 @@ This only needs to be done once. Also this only runs from the ec2 instance, perm
 flask run
 
 ## Deploying to EC2
-¯\\\_(ツ)\_/¯
-
 ### package app
 py setup.py bdist_wheel
 
@@ -54,13 +53,14 @@ pip install music-1.0.0-py3-none-any.whl
 Note that music is install by default in venv/lib/python3.8/site-packages/music
 
 ### init
+These commands only need running once. 
 flask init_s3
 flask init_db
 
 ### run 
 flask run
 
-## Tutorials
+## Tutorials/References
 Docker for local dynamodb container:
 https://betterprogramming.pub/how-to-set-up-a-local-dynamodb-in-a-docker-container-and-perform-the-basic-putitem-getitem-38958237b968
 
