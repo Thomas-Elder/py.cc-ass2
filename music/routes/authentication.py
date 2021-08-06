@@ -15,7 +15,7 @@ def register():
     if request.method == 'POST':
 
         if form.validate_on_submit():
-            put_user(form.email.data, form.username.data, form.password.data)
+            put_user(form.email.data, form.username.data, form.password.data, [])
             return redirect(url_for('authentication.login'))
 
         else:

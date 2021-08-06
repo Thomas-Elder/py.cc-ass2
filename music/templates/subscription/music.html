@@ -3,9 +3,9 @@
 {% block content %}
 <div class="container">
     <h3>Music Subscription App Main Page</h3>
-    <h5>Subscription area</h5>
+    <h5>User area</h5>
     User: {{ current_user.username }}
-
+    <h5>Subscription area</h5>
     {% for song in user_songs %}
     <div class="card">
         <div class="media">
